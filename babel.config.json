@@ -6,7 +6,20 @@
       "presets": [["@babel/preset-env", { "targets": { "node": "10" }, "modules": "commonjs" }]]
     },
     "esmBrowser": {
-      "presets": [["@babel/preset-env", { "modules": false }]]
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "chrome": "49",
+              "edge": "14",
+              "firefox": "51",
+              "safari": "11"
+            },
+            "modules": false
+          }
+        ]
+      ]
     },
     "esmNode": {
       "presets": [["@babel/preset-env", { "targets": { "node": "10" }, "modules": false }]]

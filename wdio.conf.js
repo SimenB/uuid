@@ -40,19 +40,10 @@ const capabilities = [
     'bstack:options': {
       ...commonCapabilities,
       os: 'Windows',
-      osVersion: '10',
+      osVersion: '11',
     },
     browserName: 'Chrome',
     browserVersion: '92.0',
-  },
-  {
-    'bstack:options': {
-      ...commonCapabilities,
-      os: 'Windows',
-      osVersion: '10',
-    },
-    browserName: 'Chrome',
-    browserVersion: '81.0',
   },
   // Chrome 49 released on 2016-03-02 was the last version supported on Windows XP, Windows Vista, Mac OS X 10.6, 10.7, and 10.8
   {
@@ -66,15 +57,17 @@ const capabilities = [
   },
 
   // Firefox
+  // Latest
   {
     'bstack:options': {
       ...commonCapabilities,
       os: 'Windows',
-      osVersion: '10',
+      osVersion: '11',
     },
     browserName: 'Firefox',
-    browserVersion: '75.0',
+    browserVersion: '94.0',
   },
+  // Firefox 51 was the first Firefox to correctly support const/let
   {
     'bstack:options': {
       ...commonCapabilities,
@@ -82,7 +75,7 @@ const capabilities = [
       osVersion: '10',
     },
     browserName: 'Firefox',
-    browserVersion: '44.0',
+    browserVersion: '51.0',
   },
 
   // Edge
@@ -90,11 +83,13 @@ const capabilities = [
     'bstack:options': {
       ...commonCapabilities,
       os: 'Windows',
-      osVersion: '10',
+      osVersion: '11',
     },
     browserName: 'Edge',
-    browserVersion: '81.0',
+    browserVersion: '96.0',
   },
+  // While Edge 12 already supported const/let, Edge 15 is the earliest Edge available on
+  // Browserstack
   {
     'bstack:options': {
       ...commonCapabilities,
@@ -110,19 +105,20 @@ const capabilities = [
     'bstack:options': {
       ...commonCapabilities,
       os: 'OS X',
-      osVersion: 'Catalina',
+      osVersion: 'Monterey',
     },
     browserName: 'Safari',
-    browserVersion: '13.0',
+    browserVersion: '15.0',
   },
+  // Safari 11 was the first Safari to correctly support const/let
   {
     'bstack:options': {
       ...commonCapabilities,
       os: 'OS X',
-      osVersion: 'Sierra',
+      osVersion: 'High Sierra',
     },
     browserName: 'Safari',
-    browserVersion: '10.0',
+    browserVersion: '11.0',
   },
 ];
 
