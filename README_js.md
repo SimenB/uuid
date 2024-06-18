@@ -19,9 +19,9 @@ require('crypto').randomUUID = undefined;
 
 # uuid [![CI](https://github.com/uuidjs/uuid/workflows/CI/badge.svg)](https://github.com/uuidjs/uuid/actions?query=workflow%3ACI) [![Browser](https://github.com/uuidjs/uuid/workflows/Browser/badge.svg)](https://github.com/uuidjs/uuid/actions?query=workflow%3ABrowser)
 
-For the creation of [RFC4122](https://www.ietf.org/rfc/rfc4122.txt) UUIDs
+For the creation of [RFC9562](https://www.rfc-editor.org/rfc/rfc9562.html) (formally [RFC4122](https://www.rfc-editor.org/rfc/rfc4122.html)) UUIDs
 
-- **Complete** - Support for RFC4122 version 1, 3, 4, 5, and 7 UUIDs
+- **Complete** - Support for all RFC9562 (nee RFC4122) UUID versions
 - **Cross-platform** - Support for ...
   - CommonJS, [ECMAScript Modules](#ecmascript-modules) and [CDN builds](#cdn-builds)
   - NodeJS 16+ ([LTS releases](https://github.com/nodejs/Release))
@@ -75,10 +75,14 @@ For timestamp UUIDs, namespace UUIDs, and other options read on ...
 | [`uuid.parse()`](#uuidparsestr) | Convert UUID string to array of bytes | New in `uuid@8.3` |
 | [`uuid.stringify()`](#uuidstringifyarr-offset) | Convert array of bytes to UUID string | New in `uuid@8.3` |
 | [`uuid.v1()`](#uuidv1options-buffer-offset) | Create a version 1 (timestamp) UUID |  |
+| [`uuid.v1ToV6()`](#uuidv1tov6uuid) | Create a version 6 UUID from a version 1 UUID | New in `uuid@10` |
 | [`uuid.v3()`](#uuidv3name-namespace-buffer-offset) | Create a version 3 (namespace w/ MD5) UUID |  |
 | [`uuid.v4()`](#uuidv4options-buffer-offset) | Create a version 4 (random) UUID |  |
 | [`uuid.v5()`](#uuidv5name-namespace-buffer-offset) | Create a version 5 (namespace w/ SHA-1) UUID |  |
-| [`uuid.v7()`](#uuidv7options-buffer-offset) | Create a version 7 (Unix Epoch time-based) UUID | `experimental support` |
+| [`uuid.v6()`](#uuidv6options-buffer-offset) | Create a version 6 (timestamp, reordered) UUID | New in `uuid@10` |
+| [`uuid.v6ToV1()`](#uuidv6tov1uuid) | Create a version 1 UUID from a version 6 UUID | New in `uuid@10` |
+| [`uuid.v7()`](#uuidv7options-buffer-offset) | Create a version 7 (Unix Epoch time-based) UUID | New in `uuid@10` |
+| ~~[`uuid.v8()`](#uuidv8)~~ | "Intentionally left blank" |  |
 | [`uuid.validate()`](#uuidvalidatestr) | Test a string to see if it is a valid UUID | New in `uuid@8.3` |
 | [`uuid.version()`](#uuidversionstr) | Detect RFC version of a UUID | New in `uuid@8.3` |
 
@@ -181,7 +185,7 @@ Create an RFC version 1 (timestamp) UUID
 
 <!-- prettier-ignore -->
 > [!NOTE]
-> The default [node id](https://tools.ietf.org/html/rfc4122#section-4.1.6) (the last 12 digits in the UUID) is generated once, randomly, on process startup, and then remains unchanged for the duration of the process.
+> The default [node id](https://datatracker.ietf.org/doc/html/rfc9562#section-5.1) (the last 12 digits in the UUID) is generated once, randomly, on process startup, and then remains unchanged for the duration of the process.
 
 <!-- prettier-ignore -->
 > [!NOTE]
@@ -200,13 +204,23 @@ Example using `options`:
 ```javascript --run
 import { v1 as uuidv1 } from 'uuid';
 
-const v1options = {
+const options = {
   node: [0x01, 0x23, 0x45, 0x67, 0x89, 0xab],
   clockseq: 0x1234,
   msecs: new Date('2011-11-01').getTime(),
   nsecs: 5678,
 };
-uuidv1(v1options); // RESULT
+uuidv1(options); // RESULT
+```
+
+### uuid.v1ToV6(uuid)
+
+Convert a UUID from version 1 to version 6
+
+```javascript --run
+import { v1ToV6 } from 'uuid';
+
+v1ToV6('92f62d9e-22c4-11ef-97e9-325096b39f47'); // RESULT
 ```
 
 ### uuid.v3(name, namespace[, buffer[, offset]])
@@ -289,6 +303,42 @@ import { v5 as uuidv5 } from 'uuid';
 uuidv5('https://www.w3.org/', uuidv5.URL); // RESULT
 ```
 
+### uuid.v6([options[, buffer[, offset]]])
+
+Create an RFC version 6 (timestamp, reordered) UUID
+
+This method takes the same arguments as uuid.v1().
+
+```javascript --run
+import { v6 as uuidv6 } from 'uuid';
+
+uuidv6(); // RESULT
+```
+
+Example using `options`:
+
+```javascript --run
+import { v6 as uuidv6 } from 'uuid';
+
+const options = {
+  node: [0x01, 0x23, 0x45, 0x67, 0x89, 0xab],
+  clockseq: 0x1234,
+  msecs: new Date('2011-11-01').getTime(),
+  nsecs: 5678,
+};
+uuidv6(options); // RESULT
+```
+
+### uuid.v6ToV1(uuid)
+
+Convert a UUID from version 6 to version 1
+
+```javascript --run
+import { v6ToV1 } from 'uuid';
+
+v6ToV1('1ef22c49-2f62-6d9e-97e9-325096b39f47'); // RESULT
+```
+
 ### uuid.v7([options[, buffer[, offset]]])
 
 Create an RFC version 7 (random) UUID
@@ -311,6 +361,14 @@ import { v7 as uuidv7 } from 'uuid';
 
 uuidv7(); // RESULT
 ```
+
+### ~~uuid.v8()~~
+
+**_"Intentionally left blank"_**
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> Version 8 (experimental) UUIDs are "[for experimental or vendor-specific use cases](https://www.rfc-editor.org/rfc/rfc9562.html#name-uuid-version-8)".  The RFC does not define a creation algorithm for them, which is why this package does not offer a `v8()` method.  The `validate()` and `version()` methods do work with such UUIDs, however.
 
 ### uuid.validate(str)
 
@@ -394,7 +452,7 @@ Usage:
   uuid --help
 
 Note: <namespace uuid> may be "URL" or "DNS" to use the corresponding UUIDs
-defined by RFC4122
+defined by RFC9562
 ```
 
 ## ECMAScript Modules
